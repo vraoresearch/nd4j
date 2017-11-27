@@ -2,6 +2,7 @@ package org.nd4j.linalg.nativ;
 
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.nd4j.linalg.BaseNd4jTest;
@@ -25,7 +26,14 @@ public class NativeBlasTests extends BaseNd4jTest {
 
     @Before
     public void setUp() {
-        //Nd4j.getExecutioner()
+        Nd4j.getExecutioner().enableDebugMode(true);
+        Nd4j.getExecutioner().enableVerboseMode(true);
+    }
+
+    @After
+    public void setDown() {
+        Nd4j.getExecutioner().enableDebugMode(false);
+        Nd4j.getExecutioner().enableVerboseMode(false);
     }
 
     @Test
@@ -49,6 +57,7 @@ public class NativeBlasTests extends BaseNd4jTest {
 
         Nd4j.getExecutioner().exec(matmul);
 
+        // ?
         assertEquals(exp, res);
     }
 

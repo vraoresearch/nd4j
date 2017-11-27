@@ -657,6 +657,7 @@ public class Nd4jCpu extends org.nd4j.nativeblas.Nd4jCpuPresets {
 // #define ND4J_EXPORT
 // #endif
 // #include <dll.h>
+// #include <helpers/BlasHelper.h>
 
 /*
 int tad_threshold = 1;
@@ -667,13 +668,6 @@ bool verbose = false;
 */
 
 // #include <array/ShapeList.h>
-// #include <cblas.h>
-
-// #ifdef _WIN32
-// #define CUBLASWINAPI __stdcall
-// #else
-// #define CUBLASWINAPI 
-// #endif
 
 public static class NativeOps extends org.nd4j.nativeblas.NativeOps {
     static { Loader.load(); }
@@ -8391,6 +8385,10 @@ public static class NativeOps extends org.nd4j.nativeblas.NativeOps {
             public native int numberOfPlaceholders();
             public native @Cast("nd4j::graph::Variable<float>**") @StdVector PointerPointer getPlaceholders();
 
+            public native @Cast("bool") boolean hasExternalVariable(int it);
+            public native @Cast("bool") boolean hasExternalVariable(@ByRef IntIntPair pair);
+            public native @Cast("bool") boolean hasExternalVariable(@StdString @Cast({"char*", "std::string*"}) BytePointer symbol);
+
             public native @Cast("bool") boolean hasVariable(int id);
             public native @Cast("bool") boolean hasVariable(int id, int idx);
             public native @Cast("bool") boolean hasVariable(@ByRef IntIntPair pair);
@@ -8448,6 +8446,10 @@ public static class NativeOps extends org.nd4j.nativeblas.NativeOps {
             public native int numberOfPlaceholders();
             public native @Cast("nd4j::graph::Variable<float16>**") @StdVector PointerPointer getPlaceholders();
 
+            public native @Cast("bool") boolean hasExternalVariable(int it);
+            public native @Cast("bool") boolean hasExternalVariable(@ByRef IntIntPair pair);
+            public native @Cast("bool") boolean hasExternalVariable(@StdString @Cast({"char*", "std::string*"}) BytePointer symbol);
+
             public native @Cast("bool") boolean hasVariable(int id);
             public native @Cast("bool") boolean hasVariable(int id, int idx);
             public native @Cast("bool") boolean hasVariable(@ByRef IntIntPair pair);
@@ -8504,6 +8506,10 @@ public static class NativeOps extends org.nd4j.nativeblas.NativeOps {
 
             public native int numberOfPlaceholders();
             public native @Cast("nd4j::graph::Variable<double>**") @StdVector PointerPointer getPlaceholders();
+
+            public native @Cast("bool") boolean hasExternalVariable(int it);
+            public native @Cast("bool") boolean hasExternalVariable(@ByRef IntIntPair pair);
+            public native @Cast("bool") boolean hasExternalVariable(@StdString @Cast({"char*", "std::string*"}) BytePointer symbol);
 
             public native @Cast("bool") boolean hasVariable(int id);
             public native @Cast("bool") boolean hasVariable(int id, int idx);
