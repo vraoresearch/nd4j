@@ -336,6 +336,8 @@ public class TensorFlowImportTest {
 
         assertEquals(2, graph.nodes(0).inputPairedLength());
         assertEquals(2, graph.nodes(1).inputPairedLength());
+
+        tg.asFlatFile(new File("../../../libnd4j/tests_cpu/resources/nested_while.fb"));
     }
 
     @Test
@@ -360,6 +362,21 @@ public class TensorFlowImportTest {
         assertEquals(5, graph.variablesLength());
 
         val nodeSlice = graph.nodes(0);
+
+        assertEquals(5, nodeSlice.extraIntegerLength());
+
+        val begin_mask = nodeSlice.extraInteger(0);
+        val ellipsis_mask = nodeSlice.extraInteger(1);
+        val end_mask = nodeSlice.extraInteger(2);
+        val new_axis_mask = nodeSlice.extraInteger(3);
+        val shrink_axis_mask = nodeSlice.extraInteger(4);
+
+        assertEquals(0, begin_mask);
+        assertEquals(0, ellipsis_mask);
+        assertEquals(0, end_mask);
+        assertEquals(0, new_axis_mask);
+        assertEquals(0, shrink_axis_mask);
+
         val nodeSum = graph.nodes(1);
 
         assertEquals("StridedSlice", nodeSlice.name());
@@ -384,6 +401,9 @@ public class TensorFlowImportTest {
         assertEquals(6, in1.first());
         assertEquals(0, in1.second());
 
+
+        tg.asFlatFile(new File("../../../libnd4j/tests_cpu/resources/tensor_slice.fb"));
+
     }
 
     @Test
@@ -407,6 +427,8 @@ public class TensorFlowImportTest {
         assertEquals("TensorArray", graph.nodes(1).name());
 
         assertEquals(4, graph.nodes(0).inputPairedLength());
+
+        //tg.asFlatFile(new File("../../../libnd4j/tests_cpu/resources/tensor_array.fb"));
     }
 
     @Test
@@ -458,14 +480,15 @@ public class TensorFlowImportTest {
         val tg = TFGraphMapper.getInstance().importGraph(new ClassPathResource("tf_graphs/reduce_dim.pb.txt").getInputStream());
         val sumResultVar = tg.getVariable("Sum");
         val func = tg.getFunctionForVertexId(sumResultVar.getVertexId());
-        assertEquals(1,func.getDimensions()[0]);
+        assertEquals(0,func.getDimensions()[0]);
+        assertEquals(1,func.getDimensions()[1]);
         assertEquals(3,tg.variables().size());
         assertNotNull(sumResultVar);
         assertNotNull(tg.getFunctionForVertexId(sumResultVar.getVertexId()));
         System.out.println(tg.variables());
 
         assertNotNull(func.getDimensions());
-        assertEquals(1,func.getDimensions()[0]);
+        assertEquals(1,func.getDimensions()[1]);
 
         val fb = tg.asFlatBuffers();
         assertNotNull(fb);
@@ -493,7 +516,7 @@ public class TensorFlowImportTest {
         assertEquals(0, in1.second());
 
 
-        assertEquals(1, nodeSum.dimensions(0));
+        assertEquals(1, nodeSum.dimensions(1));
 
 
         //log.info("nodeSum inputs length: {}; inputPaired length: {}",nodeSum.inputLength(), nodeSum.inputPairedLength());

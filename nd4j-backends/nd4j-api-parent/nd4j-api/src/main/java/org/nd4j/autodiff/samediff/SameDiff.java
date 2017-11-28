@@ -3961,7 +3961,8 @@ public class SameDiff {
     }
 
     protected int asFlatNode(@NonNull DifferentialFunction node, @NonNull FlatBufferBuilder bufferBuilder) {
-        log.info("Exporting node: [{}:<{}>]", node.opName(), node.opName());
+        val hash = getOpNum(node.opName(), node.opType());
+        log.info("Exporting node: [{}:<{}> - {}]", node.opName(), node.tensorflowName(), hash);
 
         float[] extras = node.getExtraArgs() != null ? new float[node.getExtraArgs().length] : new float[0];
         for (int e = 0; e < extras.length; e++) {
@@ -4002,7 +4003,7 @@ public class SameDiff {
                 node.getVertexId()[0],
                 fname,
                 getFlatOpType(node.opType()),
-                getOpNum(node.opName(), node.opType()),
+                hash,
                 nodesIn,
                 nodesInPaired,
                 (byte) 0,
