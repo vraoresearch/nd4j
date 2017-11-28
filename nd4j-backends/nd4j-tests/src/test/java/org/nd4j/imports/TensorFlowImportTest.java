@@ -138,7 +138,7 @@ public class TensorFlowImportTest {
          * python  ~/anaconda2/lib/python2.7/site-packages/tensorflow/python/tools/freeze_graph.py  --input_graph=graph2.pb.txt  --input_checkpoint=test3.ckpt  --output_graph=graph_frozen2.pb  --output_node_name=output/BiasAdd --input_binary=False
 
          */
-
+        /*
         Nd4j.create(1);
         val rawGraph = GraphDef.parseFrom(new ClassPathResource("tf_graphs/lenet_cnn.pb").getInputStream());
         val nodeNames = rawGraph.getNodeList().stream().map(node -> node.getName()).collect(Collectors.toList());
@@ -152,6 +152,7 @@ public class TensorFlowImportTest {
         System.out.println(Arrays.toString(shape));
         assertArrayEquals(new int[]{32,1,5,5},shape);
         System.out.println(convNode);
+        */
     }
 
     @Test

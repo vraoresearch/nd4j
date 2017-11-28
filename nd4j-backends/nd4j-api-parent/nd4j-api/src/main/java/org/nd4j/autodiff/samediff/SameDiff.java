@@ -3901,6 +3901,8 @@ public class SameDiff {
                 return OpType.TRANSFORM;
             case REDUCE:
                 return OpType.ACCUMULATION;
+            case REDUCE3:
+                return OpType.ACCUMULATION3;
             case INDEXREDUCE:
                 return OpType.INDEX_ACCUMULATION;
             case LOOP:
@@ -3912,7 +3914,7 @@ public class SameDiff {
             case SHAPE:
                 return OpType.SHAPE;
             case PAIRWISE:
-                return OpType.TRANSFORM;
+                return OpType.PAIRWISE;
             default:
                 throw new UnsupportedOperationException("Unknown op type passed in: " + type);
         }
