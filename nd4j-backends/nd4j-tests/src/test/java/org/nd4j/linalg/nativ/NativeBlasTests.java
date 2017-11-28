@@ -61,6 +61,115 @@ public class NativeBlasTests extends BaseNd4jTest {
         assertEquals(exp, res);
     }
 
+
+    @Test
+    public void testBlasGemm2() {
+
+        // we're skipping blas here
+        if (Nd4j.getExecutioner().getClass().getSimpleName().toLowerCase().contains("cuda"))
+            return;
+
+        val A = Nd4j.linspace(1, 9, 9).reshape('c', 3, 3).dup('f');
+        val B = Nd4j.linspace(1, 9, 9).reshape('c', 3, 3).dup('f');
+
+        val exp = A.mmul(B);
+
+        val res = Nd4j.create(new int[] {3, 3}, 'c');
+
+        val matmul = DynamicCustomOp.builder("matmul")
+                .addInputs(A, B)
+                .addOutputs(res)
+                .build();
+
+        Nd4j.getExecutioner().exec(matmul);
+
+        // ?
+        assertEquals(exp, res);
+    }
+
+
+    @Test
+    public void testBlasGemm3() {
+
+        // we're skipping blas here
+        if (Nd4j.getExecutioner().getClass().getSimpleName().toLowerCase().contains("cuda"))
+            return;
+
+        val A = Nd4j.linspace(1, 9, 9).reshape('c', 3, 3).dup('f');
+        val B = Nd4j.linspace(1, 9, 9).reshape('c', 3, 3);
+
+        val exp = A.mmul(B);
+
+        val res = Nd4j.create(new int[] {3, 3}, 'c');
+
+        val matmul = DynamicCustomOp.builder("matmul")
+                .addInputs(A, B)
+                .addOutputs(res)
+                .build();
+
+        Nd4j.getExecutioner().exec(matmul);
+
+        // ?
+        assertEquals(exp, res);
+    }
+
+
+
+    @Test
+    public void testBlasGemv1() {
+
+        // we're skipping blas here
+        if (Nd4j.getExecutioner().getClass().getSimpleName().toLowerCase().contains("cuda"))
+            return;
+
+        val A = Nd4j.linspace(1, 9, 9).reshape('c', 3, 3);
+        val B = Nd4j.linspace(1, 3, 3).reshape('c', 3, 1);
+
+        val res = Nd4j.create(new int[] {1, 3}, 'c');
+
+        val matmul = DynamicCustomOp.builder("matmul")
+                .addInputs(A, B)
+                .addOutputs(res)
+                .build();
+
+        Nd4j.getExecutioner().exec(matmul);
+
+
+        val exp = A.mmul(B);
+        log.info("exp: {}", exp);
+
+        // ?
+        assertEquals(exp, res);
+    }
+
+
+    @Test
+    public void testBlasGemv2() {
+
+        // we're skipping blas here
+        if (Nd4j.getExecutioner().getClass().getSimpleName().toLowerCase().contains("cuda"))
+            return;
+
+        val A = Nd4j.linspace(1, 9, 9).reshape('c', 3, 3).dup('f');
+        val B = Nd4j.linspace(1, 3, 3).reshape('c', 3, 1).dup('f');
+
+        val res = Nd4j.create(new int[] {1, 3}, 'f');
+
+        val matmul = DynamicCustomOp.builder("matmul")
+                .addInputs(A, B)
+                .addOutputs(res)
+                .build();
+
+        Nd4j.getExecutioner().exec(matmul);
+
+
+        val exp = A.mmul(B);
+        log.info("exp mean: {}", exp.meanNumber());
+
+        // ?
+        assertEquals(exp, res);
+    }
+
     @Override
     public char ordering() {
         return 'c';
