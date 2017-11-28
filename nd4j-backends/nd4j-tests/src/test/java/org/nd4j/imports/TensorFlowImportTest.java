@@ -20,6 +20,7 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -168,7 +169,7 @@ public class TensorFlowImportTest {
         val tg = TFGraphMapper.getInstance().importGraph(new ClassPathResource("tf_graphs/tensorflow_inception_graph.pb").getInputStream());
 
         assertTrue(tg.getVariable("input") != null);
-       // assertTrue(tg.getVariableSpace().getVariable("input").isPlaceholder());
+        // assertTrue(tg.getVariableSpace().getVariable("input").isPlaceholder());
 
         val ipod = Nd4j.read(new DataInputStream(new ClassPathResource("tf_graphs/ipod.nd4").getInputStream()));
 
@@ -457,13 +458,14 @@ public class TensorFlowImportTest {
         val tg = TFGraphMapper.getInstance().importGraph(new ClassPathResource("tf_graphs/reduce_dim.pb.txt").getInputStream());
         val sumResultVar = tg.getVariable("Sum");
         val func = tg.getFunctionForVertexId(sumResultVar.getVertexId());
+        assertEquals(1,func.getDimensions()[0]);
         assertEquals(3,tg.variables().size());
         assertNotNull(sumResultVar);
         assertNotNull(tg.getFunctionForVertexId(sumResultVar.getVertexId()));
         System.out.println(tg.variables());
 
         assertNotNull(func.getDimensions());
-        assertEquals(Integer.MAX_VALUE,func.getDimensions()[0]);
+        assertEquals(1,func.getDimensions()[0]);
 
         val fb = tg.asFlatBuffers();
         assertNotNull(fb);
@@ -491,6 +493,9 @@ public class TensorFlowImportTest {
         assertEquals(0, in1.second());
 
 
+        assertEquals(1, nodeSum.dimensions(0));
+
+
         //log.info("nodeSum inputs length: {}; inputPaired length: {}",nodeSum.inputLength(), nodeSum.inputPairedLength());
 
         tg.asFlatFile(new File("../../../libnd4j/tests_cpu/resources/reduce_dim.fb"));
@@ -514,8 +519,9 @@ public class TensorFlowImportTest {
 
         INDArray input = Nd4j.linspace(1,40,40).reshape(10,4);
         INDArray expectedOutput = Nd4j.linspace(1,40,40).reshape(10,4).addRowVector(Nd4j.linspace(1,4,4));
-        graph.associateArrayWithVariable(input,graph.variableMap().get("input"));
-        INDArray actual = graph.execAndEndResult();
+        INDArray actual =  graph.execWithPlaceHolderAndEndResult(Collections.singletonMap("input",input));
+        assertEquals(input,graph.getVariable("input").getArr());
+        assertArrayEquals(input.shape(),graph.getShapeForVertexId(graph.getVariable("input").getVertexId()));
         assertEquals(expectedOutput,actual);
     }
 }

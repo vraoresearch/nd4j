@@ -238,9 +238,24 @@ public abstract class DifferentialFunction implements Differential {
 
     //by default no op, used for certain situations like
     //place holder arrays
-    public void initWithArrays(Map<String,INDArray> arrayMap) {}
+    public void initWithArrays(Map<String,INDArray> arrayMap) {
+        if(hasPlaceHolderInputs()) {
+            //update place holder shapes in case the shapes
+            // need to be resolved
+            //post adding the variables to the graph.
+            sameDiff.updateShapeForVertexId(resultVertexId(),calculateOutputShape().get(0));
+        }
+    }
 
 
+    /**
+     * Returns true if this
+     * function has place holder inputs
+     * @return
+     */
+    public boolean hasPlaceHolderInputs() {
+        return sameDiff.hasPlaceHolderVariables(vertexId);
+    }
 
     @Override
     public abstract String toString();
@@ -338,6 +353,8 @@ public abstract class DifferentialFunction implements Differential {
             throw new IllegalStateException("Unable to fill in arrays. Type must be an operation.");
     }
 
+
+
     /**
      * Get the result
      * @return
@@ -391,7 +408,7 @@ public abstract class DifferentialFunction implements Differential {
     public DifferentialFunction rarg() {
         val args = args();
         if(args == null || args.length != 2)
-            throw new ND4JIllegalStateException("In order to use this function, the numebr of arguments for this function must be 2.");
+            throw new ND4JIllegalStateException("In order to use this function, the number of arguments for this function must be 2.");
         return args[1];
     }
 

@@ -37,7 +37,7 @@ public class Conv2D extends DynamicCustomOp {
                   Conv2DConfig conv2DConfig) {
         super(null,inputArrays,outputs);
         this.sameDiff = sameDiff;
-        if(inputFunctions != null)
+        if(inputFunctions != null && sameDiff != null)
             sameDiff.associateFunctionsAsArgs(inputFunctions,this);
         this.conv2DConfig = conv2DConfig;
         addArgs();
@@ -56,6 +56,11 @@ public class Conv2D extends DynamicCustomOp {
         getIArguments().add(conv2DConfig.getDw());
         getIArguments().add(fromBoolean(conv2DConfig.isSameMode()));
 
+    }
+
+    @Override
+    public int[] getResultShape() {
+        return this.calculateOutputShape().get(0);
     }
 
     @Override
