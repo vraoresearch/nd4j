@@ -17,6 +17,7 @@ import org.nd4j.linalg.util.HashUtil;
 import org.tensorflow.framework.GraphDef;
 
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -491,7 +492,7 @@ public class TensorFlowImportTest {
 
         //log.info("nodeSum inputs length: {}; inputPaired length: {}",nodeSum.inputLength(), nodeSum.inputPairedLength());
 
-        //tg.asFlatFile(new File("../../../libnd4j/tests_cpu/resources/reduce_dim.fb"));
+        tg.asFlatFile(new File("../../../libnd4j/tests_cpu/resources/reduce_dim.fb"));
     }
 
     @Test
